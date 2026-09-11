@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Enhanced Sesame Arrival Tab
 // @namespace    https://trans-logistics.amazon.com/yms
-// @version      9.1
+// @version      9.2
 // @description  Enhances the Sesame Arrivals page by showing license plate (LPN), driver name, and phone next to each VRID. Fully automatic — captures RTT auth token silently, auto-retries on 401, refreshes token every 45 min. Works for any site.
 // @author       lingxuan
 // @match        https://trans-logistics.amazon.com/yms/sesameGateConsole*
@@ -362,9 +362,18 @@
         }
 
         function processVridElement(el) {
-            el.setAttribute(PROCESSED_ATTR, 'true');
             const m = el.textContent.trim().match(/VRID\s+([A-Z0-9]+)/i);
             if (!m || m[1].length < 5) return;
+
+            // Prevent duplicates: check if already processed or if a badge already exists nearby
+            if (el.getAttribute(PROCESSED_ATTR)) return;
+            const nextSibling = el.nextSibling || el.nextElementSibling;
+            if (nextSibling && nextSibling.classList && (nextSibling.classList.contains('lpn-badge') || nextSibling.classList.contains('lpn-container'))) return;
+            // Also check parent for existing badges
+            const parent = el.parentElement;
+            if (parent && parent.querySelector('.lpn-badge, .lpn-container')) return;
+
+            el.setAttribute(PROCESSED_ATTR, 'true');
             const badge = createBadge('🔄 Loading...', 'loading');
             el.parentNode.insertBefore(badge, el.nextSibling);
             processVridWithElement(m[1], badge);
