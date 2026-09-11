@@ -13,6 +13,8 @@
 // @grant        GM_listValues
 // @grant        GM_xmlhttpRequest
 // @connect      track.relay.amazon.dev
+// @updateURL    https://raw.githubusercontent.com/WalreinLu/Enhanced-Sesame-Arrival-Tab/main/Enhanced_Sesame_Arrival_Tab.user.js
+// @downloadURL  https://raw.githubusercontent.com/WalreinLu/Enhanced-Sesame-Arrival-Tab/main/Enhanced_Sesame_Arrival_Tab.user.js
 // @run-at       document-start
 // ==/UserScript==
 
